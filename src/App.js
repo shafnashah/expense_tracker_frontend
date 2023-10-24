@@ -1,25 +1,36 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import LoginForm from './Loginform';
+import RegisterForm from './Registerform';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  const handleRegisterClick = () => {
+    setIsRegistering(true);
+  };
+
+  const handleRegister = () => {
+    setIsRegistering(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="center-content">
+      {isRegistering ? (
+        <RegisterForm onRegister={handleRegister} />
+      ) : (
+        <div>
+          <LoginForm />
+          <div className="link">
+            <p>Don't have an account? <button className="link-button" onClick={handleRegisterClick}>Register</button></p>
+          </div>
+          <ToastContainer />
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
