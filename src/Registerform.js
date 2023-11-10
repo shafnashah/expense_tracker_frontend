@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
-const RegisterForm = ({ onRegister }) => {
+const RegisterForm = ({ onRegister, onLogin}) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +16,7 @@ const RegisterForm = ({ onRegister }) => {
     axios.post('http://localhost:3000/register', { username, email, password })
       .then(response => {
         toast.success('Registration successful. You can now login.');
-        onRegister();
+       onRegister();
       })
       .catch(error => {
         if (error.response) {
@@ -60,7 +62,7 @@ const RegisterForm = ({ onRegister }) => {
           <button className="button" type="submit">Register</button>
         </form>
         <div className="link">
-          <p>Already have an account? <button className="link-button" onClick={onRegister}>Login</button></p>
+        <p>Already have an account? <button className="link-button"  onClick={() => navigate('/login')}>Login</button></p>
         </div>
       </div>
       <ToastContainer />

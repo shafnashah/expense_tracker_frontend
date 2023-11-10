@@ -1,35 +1,59 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import './App.css';
 import LoginForm from './Loginform';
 import RegisterForm from './Registerform';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import './App.css';
+import ExpensePage from './expense';
+
 
 const App = () => {
-  const [isRegistering, setIsRegistering] = useState(false);
-
-  const handleRegisterClick = () => {
-    setIsRegistering(true);
-  };
+  const [authenticated, setAuthenticated] = useState(false); 
+  const [userId, setUserId] = useState(null);
+  const [showLogin, setShowLogin] = useState(true);
 
   const handleRegister = () => {
-    setIsRegistering(false);
+    setShowLogin(false);
+  };
+
+  const handleLogin = (id) => {
+    setUserId(id); 
+    setAuthenticated(true);
   };
 
   return (
-    <div className="center-content">
-      {isRegistering ? (
-        <RegisterForm onRegister={handleRegister} />
-      ) : (
-        <div>
-          <LoginForm />
-          <div className="link">
-            <p>Don't have an account? <button className="link-button" onClick={handleRegisterClick}>Register</button></p>
-          </div>
-          <ToastContainer />
-        </div>
-      )}
-    </div>
+    <Router>
+      <div className="app">
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              !authenticated ? (
+                <LoginForm
+                  onLogin={handleLogin}
+                  onRegister={handleRegister}
+                />
+              ) : (
+                <Navigate to="/expenses" replace />
+              )
+            }
+          />
+          <Route
+            path="/register"
+            element={<RegisterForm onRegister={handleRegister} onLogin={handleLogin} />}
+          />
+          <Route
+            path="/expenses"
+            element={
+              authenticated ? (
+                <ExpensePage userId={userId} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
